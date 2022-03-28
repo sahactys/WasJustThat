@@ -1,6 +1,7 @@
-const val DAY = 86400
-const val HOUR = 3600
 const val MINUTE = 60
+const val HOUR = 60 * MINUTE
+const val DAY = 24 * HOUR
+
 
 fun main() {
     while (true) {
@@ -15,33 +16,36 @@ fun main() {
                 println("Ошибка ввода, попробуйте еще раз")
             }
         }
-        agoToText(time)
+
+        println(agoToText(time))
     }
 }
 
-fun agoToText(time: Int) {
-    when (time) {
-        in 0..MINUTE -> println("Был(а) только что")
+fun agoToText(time: Int): String {
+    return when (time) {
+        in 0..MINUTE -> ("Был(а) только что")
         in MINUTE + 1..HOUR -> selectWordEnding(time)
         in HOUR + 1..DAY -> selectWordEnding(time)
-        in DAY + 1..DAY * 2 -> println("Был(а) сегодня")
-        in DAY * 2 + 1..DAY * 3 -> println("Был(а) вчера")
-        in DAY * 3 + 1..Int.MAX_VALUE -> println("Был(а) давно")
+        in DAY + 1..DAY * 2 -> ("Был(а) сегодня")
+        in DAY * 2 + 1..DAY * 3 -> ("Был(а) вчера")
+        in DAY * 3 + 1..Int.MAX_VALUE -> ("Был(а) давно")
         else -> error("Что-то пошло не так")
     }
 }
 
-fun selectWordEnding(time: Int) {
-    when (time) {
+fun selectWordEnding(time: Int): String {
+    val timeMinute = time / MINUTE
+    val timeHour = time / HOUR
+    return when (time) {
         in MINUTE + 1..HOUR -> {
-            if (time / MINUTE % 10 == 1 && time / MINUTE != 11) println("Был(а) " + time / MINUTE + " минуту назад")
-            else if (time / MINUTE % 10 in 2..4 && time / MINUTE !in 12..14) println("Был(а) " + time / MINUTE + " минуты назад")
-            else println("Был(а) " + time / MINUTE + " минут назад")
+            if (timeMinute % 10 == 1 && timeMinute != 11) ("Был(а) $timeMinute минуту назад")
+            else if (timeMinute % 10 in 2..4 && timeMinute !in 12..14) ("Был(а) $timeMinute минуты назад")
+            else ("Был(а) $timeMinute минут назад")
         }
         in HOUR + 1..DAY -> {
-            if (time / HOUR % 10 == 1 && time / HOUR != 11) println("Был(а) " + time / HOUR + " час назад")
-            else if (time / HOUR % 10 in 2..4 && time / HOUR !in 12..14) println("Был(а) " + time / HOUR + " часа назад")
-            else println("Был(а) " + time / HOUR + " часов назад")
+            if (timeHour % 10 == 1 && timeHour != 11) ("Был(а) $timeHour час назад")
+            else if (timeHour % 10 in 2..4 && timeHour !in 12..14) ("Был(а) $timeHour часа назад")
+            else ("Был(а) $timeHour часов назад")
         }
         else -> error("Что-то пошло не так")
 
